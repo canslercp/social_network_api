@@ -1,0 +1,18 @@
+{
+    "name": "tech_blog",
+    "version": "1.0.0",
+    "engines": {
+        "node": "12.x",
+        "npm": "6.x"
+    },
+    "description": "An API for a social network web application where users can share their thoughts, react to friends’ thoughts, and create a friend list.",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node server.js",
+        "seed": "node utils/seed.js"
+    },
+    "dependencies": {
+        "express": "^4.18.1",
+        "mongoose": "^6.5.2"
+    }
+}
