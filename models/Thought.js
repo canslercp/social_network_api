@@ -1,8 +1,31 @@
-const mongoose = require('mongoose');
+const { Schema, model } = require('mongoose');
 var moment = require('moment');
 
+// Schema to create Reaction model
+const reactionSchema = new Schema(
+    {
+        reactionsId: {
+            type: Schema.Types.ObjectId,
+        },
+        reactionsBody: {
+            type: String,
+            required: true,
+            maxLength: 280
+        },
+        username: {
+            type: String,
+            required: true
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now,
+            get: formatTime
+        }
+    }
+)
+
 // Schema to create Thought model
-const thoughtSchema = new mongoose.Schema(
+const thoughtSchema = new Schema(
     {
         thoughtText: {
             type: String,
@@ -28,29 +51,6 @@ const thoughtSchema = new mongoose.Schema(
         id: false,
     }
 );
-
-// Schema to create Reaction model
-const reactionSchema = new mongoose.Schema(
-    {
-        reactionsId: {
-            type: mongoose.Schema.Types.ObjectId,
-        },
-        reactionsBody: {
-            type: String,
-            required: true,
-            maxLength: 280
-        },
-        username: {
-            type: String,
-            required: true
-        },
-        createdAt: {
-            type: Date,
-            default: Date.now,
-            get: formatTime
-        }
-    }
-)
 
 // getter function for createdAt
 function formatTime(date) {

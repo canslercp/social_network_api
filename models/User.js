@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
+const { Schema, model } = require('mongoose');
 
 //Schema to create User model
-const userSchema = new mongoose.Schema(
+const userSchema = new Schema(
     {
         username: {
             type: String, 
@@ -20,17 +20,24 @@ const userSchema = new mongoose.Schema(
             }
         },
         thoughts: [{
-            type: mongoose.Schema.Types.ObjectId, ref: 'Thought'
+            type: Schema.Types.ObjectId, ref: 'Thought'
         }],
         friends: [{
-            type: mongoose.Schema.Types.ObjectId, ref: 'User'
+            type: Schema.Types.ObjectId, ref: 'User'
         }]
 });
 
 // Virtual property 'commentCount' that gets the amount of comments per post
 userSchema.virtual('friendCount').get(function () {
     return this.friends.length;
-});
+},
+{
+    toJSON: {
+      virtuals: true,
+    },
+    id: false,
+}
+);
 
 // Initialize User model
 const User = model('user', userSchema);
