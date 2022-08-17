@@ -79,5 +79,33 @@ module.exports = {
           .catch((err) => res.status(500).json(err));
       },
 
+      //create a reaction stored in a single thought's reactions array field
+      createReaction(req, res) {
+        Thought.findOneAndUpdate(
+            { _id: req.params.thoughtId },
+            { $addToSet: { reactions: req.body } },
+            { runValidators: true, new: true }
+        )
+        .then((video) =>
+            !video
+                ? res.status(404).json({ message: 'No thought with this ID'})
+                : res.json(thought)
+        )
+        .catch((err) => res.status(500).json(err));
+      },
 
+      //remove a reaction by the reaction's reactionId value
+      removeReaction(req, res) {
+        Thought.findOneAndUpdate(
+            { _id: req.params.thoughtId },
+            { $pull: { reactions: { reactionsId: req.params.reactionsId } } },
+            { runValidators: true, new: true }
+        )
+        .then((thought) =>
+            !thought
+                ? res.status(404).json({ message: 'No thought with that id' } )
+                : res.json(thought)
+        )
+        .catch((err) => res.status(500).json(err));
+      }
 }
