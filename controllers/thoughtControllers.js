@@ -1,4 +1,4 @@
-const Thought = require('../models/Thought');
+const { Thought, User } = require('../models');
 
 module.exports = {
     getThoughts(req, res) {
@@ -21,7 +21,7 @@ module.exports = {
         Thought.create(req.body)
             .then((thought) => {
                 return User.findOneAndUpdate(
-                    { _id: req.body.userId },
+                    { username: req.body.username },
                     { $addToSet: { thoughts: thought._id}},
                     { new: true }
                 );
@@ -31,7 +31,7 @@ module.exports = {
                     ? res.status(404).json({
                         message: 'Thought created, but found no user with that ID',
                     })
-                    : res.json('Created the video')
+                    : res.json('Created the thought')
             )
             .catch((err) => {
                 console.log(err);
@@ -64,7 +64,7 @@ module.exports = {
             !thought
               ? res.status(404).json({ message: 'No thought with this id!' })
               : User.findOneAndUpdate(
-                  { thoughts: req.params.thoughtId },
+                  { username: req.params.username },
                   { $pull: { thoughts: req.params.thoughtId } },
                   { new: true }
                 )
@@ -72,8 +72,7 @@ module.exports = {
           .then((user) =>
             !user
               ? res
-                  .status(404)
-                  .json({ message: 'Thought created but no user with this id!' })
+                  .status(404).json({ message: 'No user with this username!' })
               : res.json({ message: 'Thought successfully deleted!' })
           )
           .catch((err) => res.status(500).json(err));
@@ -86,8 +85,8 @@ module.exports = {
             { $addToSet: { reactions: req.body } },
             { runValidators: true, new: true }
         )
-        .then((video) =>
-            !video
+        .then((thought) =>
+            !thought
                 ? res.status(404).json({ message: 'No thought with this ID'})
                 : res.json(thought)
         )
@@ -98,13 +97,13 @@ module.exports = {
       removeReaction(req, res) {
         Thought.findOneAndUpdate(
             { _id: req.params.thoughtId },
-            { $pull: { reactions: { reactionsId: req.params.reactionsId } } },
+            { $pull: { reactions: req.params.reactionsId } },
             { runValidators: true, new: true }
         )
         .then((thought) =>
             !thought
                 ? res.status(404).json({ message: 'No thought with that id' } )
-                : res.json(thought)
+                : res.json({ message: 'Reaction successfully deleted!' })
         )
         .catch((err) => res.status(500).json(err));
       }

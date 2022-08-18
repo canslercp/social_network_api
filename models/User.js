@@ -27,7 +27,7 @@ const userSchema = new Schema(
         }]
 });
 
-// Virtual property 'commentCount' that gets the amount of comments per post
+// Virtual property 'friendCount' that gets the amount of comments per post
 userSchema.virtual('friendCount').get(function () {
     return this.friends.length;
 },
